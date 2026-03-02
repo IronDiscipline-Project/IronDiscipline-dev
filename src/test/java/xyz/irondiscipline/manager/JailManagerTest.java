@@ -99,6 +99,12 @@ class JailManagerTest {
             return null;
         }).when(taskScheduler).runEntity(any(), any(Runnable.class));
 
+        doAnswer(invocation -> {
+            Runnable r = invocation.getArgument(0);
+            r.run();
+            return null;
+        }).when(taskScheduler).runAsync(any(Runnable.class));
+
         jailManager = new JailManager(plugin);
     }
 

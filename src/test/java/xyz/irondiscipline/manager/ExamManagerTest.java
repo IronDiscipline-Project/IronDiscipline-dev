@@ -2,6 +2,7 @@ package xyz.irondiscipline.manager;
 
 import xyz.irondiscipline.IronDiscipline;
 import xyz.irondiscipline.model.Rank;
+import xyz.irondiscipline.util.TaskScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
@@ -48,6 +49,8 @@ class ExamManagerTest {
     private Location instructorLoc;
     @Mock
     private Location nearbyLoc;
+    @Mock
+    private TaskScheduler taskScheduler;
 
     private ExamManager examManager;
     private AutoCloseable mocks;
@@ -60,7 +63,14 @@ class ExamManagerTest {
 
         when(plugin.getConfigManager()).thenReturn(configManager);
         when(plugin.getRankManager()).thenReturn(rankManager);
-        
+        when(plugin.getTaskScheduler()).thenReturn(taskScheduler);
+
+        doAnswer(invocation -> {
+            Runnable r = invocation.getArgument(1);
+            r.run();
+            return null;
+        }).when(taskScheduler).runEntity(any(), any(Runnable.class));
+
         bukkitMock.when(Bukkit::getPluginManager).thenReturn(pluginManager);
         bukkitMock.when(() -> Bukkit.broadcastMessage(anyString())).then(invocation -> null);
 
@@ -70,6 +80,7 @@ class ExamManagerTest {
         when(instructorLoc.distance(instructorLoc)).thenReturn(0.0); // Instructor is at their own location
         
         when(target.getName()).thenReturn("Target");
+        when(target.isOnline()).thenReturn(true);
         
         when(nearbyPlayer.getLocation()).thenReturn(nearbyLoc);
         
