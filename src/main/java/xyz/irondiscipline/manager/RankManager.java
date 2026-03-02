@@ -133,7 +133,7 @@ public class RankManager {
      */
     public boolean requiresPTS(Player player) {
         int threshold = plugin.getConfigManager().getPTSRequireBelowWeight();
-        return getRank(player).getWeight() <= threshold;
+        return !getRank(player).isHigherThan(Rank.fromWeight(threshold));
     }
 
     /**
@@ -184,11 +184,18 @@ public class RankManager {
      * プレイヤー参加時のキャッシュ読み込み (互換用)
      */
     public void loadPlayerCache(Player player) {
-        loadPlayerCache(player.getUniqueId());
-        // Tab/Nametag更新は別途JoinEventで行う
-        plugin.getTaskScheduler().runEntity(player, () -> {
-            String divisionDisplay = plugin.getDivisionManager().getDivisionDisplay(player.getUniqueId());
-            TabNametagUtil.updatePlayer(player, getRank(player), divisionDisplay);
+        UUID playerId = player.getUniqueId();
+        getRankAsync(playerId).thenAccept(rank -> {
+            plugin.getTaskScheduler().runEntity(player, () -> {
+                if (!player.isOnline()) {
+                    return;
+                }
+                String divisionDisplay = plugin.getDivisionManager().getDivisionDisplay(playerId);
+                TabNametagUtil.updatePlayer(player, rank, divisionDisplay);
+            });
+        }).exceptionally(ex -> {
+            plugin.getLogger().warning("Failed to load rank cache for " + player.getName() + ": " + ex.getMessage());
+            return null;
         });
     }
 

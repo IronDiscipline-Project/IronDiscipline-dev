@@ -92,9 +92,14 @@ public class AutoPromotionManager {
                     + "m / " + requiredMinutes + "m)");
             rankManager.promote(player).thenAccept(newRank -> {
                 if (newRank != null) {
-                    player.sendMessage(plugin.getConfigManager().getMessage("rank_promoted",
-                            "%player%", player.getName(),
-                            "%rank%", newRank.getDisplay()));
+                    plugin.getTaskScheduler().runEntity(player, () -> {
+                        if (!player.isOnline()) {
+                            return;
+                        }
+                        player.sendMessage(plugin.getConfigManager().getMessage("rank_promoted",
+                                "%player%", player.getName(),
+                                "%rank%", newRank.getDisplay()));
+                    });
                     // 必要であればDiscord通知など
                 }
             });

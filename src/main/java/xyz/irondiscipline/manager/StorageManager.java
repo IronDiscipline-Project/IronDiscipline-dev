@@ -10,7 +10,6 @@ import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,16 +26,36 @@ public class StorageManager {
     private final IronDiscipline plugin;
     private Connection connection;
     private final String dbType;
+    private final boolean ownsConnection;
+    private final boolean ownsExecutor;
 
     // Caches removed to prevent memory leaks
 
     // Executor for DB operations
-    private final ExecutorService dbExecutor = Executors.newCachedThreadPool();
+    private final ExecutorService dbExecutor;
 
     public StorageManager(IronDiscipline plugin) {
         this.plugin = plugin;
         this.dbType = plugin.getConfigManager().getDatabaseType();
+        this.dbExecutor = Executors.newSingleThreadExecutor();
+        this.ownsConnection = true;
+        this.ownsExecutor = true;
         initializeDatabase();
+    }
+
+    public StorageManager(IronDiscipline plugin, Connection sharedConnection, ExecutorService sharedExecutor) {
+        this.plugin = plugin;
+        this.dbType = plugin.getConfigManager().getDatabaseType();
+        this.connection = sharedConnection;
+        this.dbExecutor = sharedExecutor;
+        this.ownsConnection = false;
+        this.ownsExecutor = false;
+        try {
+            createTables();
+            plugin.getLogger().info(plugin.getConfigManager().getRawMessage("db_connected").replace("%type%", dbType.toUpperCase()));
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, plugin.getConfigManager().getRawMessage("db_connection_failed"), e);
+        }
     }
 
     private void initializeDatabase() {
@@ -664,7 +683,7 @@ public class StorageManager {
      * シャットダウン処理
      */
     public void shutdown() {
-        if (connection != null) {
+        if (ownsConnection && connection != null) {
             try {
                 connection.close();
                 plugin.getLogger().info(plugin.getConfigManager().getRawMessage("db_closed"));
@@ -672,6 +691,8 @@ public class StorageManager {
                 plugin.getLogger().log(Level.WARNING, plugin.getConfigManager().getRawMessage("db_close_failed"), e);
             }
         }
-        dbExecutor.shutdown();
+        if (ownsExecutor) {
+            dbExecutor.shutdown();
+        }
     }
 }

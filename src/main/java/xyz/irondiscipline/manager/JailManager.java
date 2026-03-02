@@ -63,12 +63,18 @@ public class JailManager {
         knownJailedIds.add(targetId);
 
         // 非同期処理開始
-        CompletableFuture.supplyAsync(() -> {
-            // インベントリのシリアライズ (重い処理)
-            String invBackup = InventoryUtil.toBase64(invContents);
-            String armorBackup = InventoryUtil.toBase64(armorContents);
-            return new String[]{invBackup, armorBackup};
-        }).thenCompose(backups -> {
+        CompletableFuture<String[]> backupFuture = new CompletableFuture<>();
+        plugin.getTaskScheduler().runAsync(() -> {
+            try {
+                String invBackup = InventoryUtil.toBase64(invContents);
+                String armorBackup = InventoryUtil.toBase64(armorContents);
+                backupFuture.complete(new String[] { invBackup, armorBackup });
+            } catch (Exception e) {
+                backupFuture.completeExceptionally(e);
+            }
+        });
+
+        backupFuture.thenCompose(backups -> {
             // DB保存
             return plugin.getStorageManager().saveJailedPlayerAsync(targetId, target.getName(), reason,
                     jailer != null ? jailer.getUniqueId() : null, locString, backups[0], backups[1]);
@@ -103,6 +109,10 @@ public class JailManager {
                 plugin.getLogger().warning("隔離処理中断: DB保存に失敗しました - " + target.getName());
                 knownJailedIds.remove(targetId); // 失敗時はキャッシュから削除
             }
+        }).exceptionally(ex -> {
+            knownJailedIds.remove(targetId);
+            plugin.getLogger().warning("隔離処理で例外が発生しました: " + target.getName() + " - " + ex.getMessage());
+            return null;
         });
 
         return true; // 処理を開始したことを返す
@@ -127,15 +137,19 @@ public class JailManager {
             return false;
         }
 
-        // DB保存 (インベントリバックアップはnull = ログイン時にバックアップ)
-        plugin.getStorageManager().saveJailedPlayerAsync(targetId, targetName, plugin.getConfigManager().getRawMessage("jail_reason_offline"),
-                jailerId, null, null, null);
+        plugin.getStorageManager().saveJailedPlayerAsync(targetId, targetName,
+            plugin.getConfigManager().getRawMessage("jail_reason_offline"),
+            jailerId, null, null, null).thenAccept(success -> {
+                if (!success) {
+                plugin.getLogger().warning("オフライン隔離のDB保存に失敗しました: " + targetName);
+                return;
+                }
 
-        // キャッシュ更新
-        JailData data = new JailData(targetId, targetName, reason,
-                System.currentTimeMillis(), jailerId, null);
-        jailedPlayers.put(targetId, data);
-        knownJailedIds.add(targetId);
+                JailData data = new JailData(targetId, targetName, reason,
+                    System.currentTimeMillis(), jailerId, null);
+                jailedPlayers.put(targetId, data);
+                knownJailedIds.add(targetId);
+            });
 
         return true;
     }
@@ -309,7 +323,7 @@ public class JailManager {
                                  // インベントリは既にクリア済み
                                  updateJailDataCache(record, locString);
                              } else {
-                                 player.kickPlayer("Critical Error: Failed to save inventory backup.");
+                                 player.kickPlayer(plugin.getConfigManager().getRawMessage("jail_backup_save_failed_kick"));
                              }
                          });
                      });

@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 
 /**
@@ -40,6 +42,7 @@ public class IronDiscipline extends JavaPlugin {
     private LinkManager linkManager;
     private DiscordManager discordManager;
     private AutoPromotionManager autoPromotionManager;
+    private WebDashboardManager webDashboardManager;
 
     // Utilities
     private xyz.irondiscipline.util.TaskScheduler taskScheduler;
@@ -47,6 +50,7 @@ public class IronDiscipline extends JavaPlugin {
 
     // Database connection
     private Connection dbConnection;
+    private ExecutorService sharedDbExecutor;
 
     @Override
     public void onEnable() {
@@ -96,11 +100,17 @@ public class IronDiscipline extends JavaPlugin {
         if (rankStorageManager != null) {
             rankStorageManager.shutdown();
         }
+        if (sharedDbExecutor != null) {
+            sharedDbExecutor.shutdown();
+        }
         if (jailManager != null) {
             jailManager.saveAll();
         }
         if (playtimeManager != null) {
             playtimeManager.saveAll();
+        }
+        if (webDashboardManager != null) {
+            webDashboardManager.shutdown();
         }
         if (discordManager != null) {
             discordManager.shutdown();
@@ -178,9 +188,10 @@ public class IronDiscipline extends JavaPlugin {
     private void initializeManagers() {
         this.taskScheduler = new xyz.irondiscipline.util.TaskScheduler(this);
         this.rankUtil = new RankUtil(this);
+        this.sharedDbExecutor = Executors.newSingleThreadExecutor();
 
-        this.storageManager = new StorageManager(this);
-        this.rankStorageManager = new RankStorageManager(this, dbConnection);
+        this.storageManager = new StorageManager(this, dbConnection, sharedDbExecutor);
+        this.rankStorageManager = new RankStorageManager(this, dbConnection, sharedDbExecutor);
         this.rankManager = new RankManager(this, rankStorageManager);
         this.ptsManager = new PTSManager(this);
         this.jailManager = new JailManager(this);
@@ -199,6 +210,9 @@ public class IronDiscipline extends JavaPlugin {
 
         // Discord Bot 起動
         initDiscord();
+
+        // Web Dashboard 起動
+        initWebDashboard();
 
         getLogger().info(configManager.getRawMessage("log_managers_initialized"));
     }
@@ -254,6 +268,15 @@ public class IronDiscipline extends JavaPlugin {
         getCommand("link").setExecutor(new LinkCommand(this));
 
         getLogger().info(configManager.getRawMessage("log_commands_registered"));
+    }
+
+    private void initWebDashboard() {
+        if (getConfig().getBoolean("dashboard.enabled", false)) {
+            this.webDashboardManager = new WebDashboardManager(this);
+            webDashboardManager.start();
+        } else {
+            getLogger().info("Web Dashboard is disabled. Set dashboard.enabled=true in config.yml to enable.");
+        }
     }
 
     private void initDiscord() {
@@ -344,6 +367,10 @@ public class IronDiscipline extends JavaPlugin {
 
     public DiscordManager getDiscordManager() {
         return discordManager;
+    }
+
+    public WebDashboardManager getWebDashboardManager() {
+        return webDashboardManager;
     }
 
     public AutoPromotionManager getAutoPromotionManager() {

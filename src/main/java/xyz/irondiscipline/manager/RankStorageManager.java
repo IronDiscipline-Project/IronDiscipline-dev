@@ -21,11 +21,22 @@ public class RankStorageManager {
 
     private final IronDiscipline plugin;
     private final Connection connection;
-    private final ExecutorService dbExecutor = Executors.newCachedThreadPool();
+    private final ExecutorService dbExecutor;
+    private final boolean ownsExecutor;
 
     public RankStorageManager(IronDiscipline plugin, Connection connection) {
+        this(plugin, connection, Executors.newSingleThreadExecutor(), true);
+    }
+
+    public RankStorageManager(IronDiscipline plugin, Connection connection, ExecutorService sharedExecutor) {
+        this(plugin, connection, sharedExecutor, false);
+    }
+
+    private RankStorageManager(IronDiscipline plugin, Connection connection, ExecutorService executor, boolean ownsExecutor) {
         this.plugin = plugin;
         this.connection = connection;
+        this.dbExecutor = executor;
+        this.ownsExecutor = ownsExecutor;
         initializeTables();
     }
 
@@ -148,6 +159,8 @@ public class RankStorageManager {
      * シャットダウン
      */
     public void shutdown() {
-        dbExecutor.shutdown();
+        if (ownsExecutor) {
+            dbExecutor.shutdown();
+        }
     }
 }

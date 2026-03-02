@@ -145,6 +145,7 @@ public class PTSManager {
                 "%player%", requester.getName());
 
         int threshold = plugin.getConfigManager().getPTSRequireBelowWeight();
+        Rank thresholdRank = Rank.fromWeight(threshold);
 
         for (Player officer : Bukkit.getOnlinePlayers()) {
             // 自分自身はスキップ
@@ -153,7 +154,7 @@ public class PTSManager {
 
             // PTS付与権限を持っているか、閾値より上の階級
             if (officer.hasPermission("iron.pts.grant") ||
-                    plugin.getRankManager().getRank(officer).getWeight() > threshold) {
+                    plugin.getRankManager().getRank(officer).isHigherThan(thresholdRank)) {
                 officer.sendMessage(message);
 
                 // サウンド通知
@@ -168,6 +169,7 @@ public class PTSManager {
      */
     public void notifyOfficersWithMessage(Player requester, String chatMessage) {
         int threshold = plugin.getConfigManager().getPTSRequireBelowWeight();
+        Rank thresholdRank = Rank.fromWeight(threshold);
         Rank requesterRank = plugin.getRankManager().getRank(requester);
 
         String formattedMessage = plugin.getConfigManager().getPTSRequestPrefix() + " " +
@@ -179,7 +181,7 @@ public class PTSManager {
                 continue;
 
             if (officer.hasPermission("iron.pts.grant") ||
-                    plugin.getRankManager().getRank(officer).getWeight() > threshold) {
+                    plugin.getRankManager().getRank(officer).isHigherThan(thresholdRank)) {
                 officer.sendMessage(formattedMessage);
             }
         }
