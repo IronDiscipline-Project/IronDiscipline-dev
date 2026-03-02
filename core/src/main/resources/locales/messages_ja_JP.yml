@@ -231,6 +231,19 @@ iron_help_bring: "&e/iron bring <player> &7- 呼び出し"
 iron_help_freeze: "&e/iron freeze <player> &7- 凍結"
 iron_help_unfreeze: "&e/iron unfreeze <player> &7- 解凍"
 iron_help_announce: "&e/iron announce <msg> &7- 全体通達"
+iron_help_addon: "&e/iron addon &7- アドオン管理"
+
+# Addon Manager
+addon_install_usage: "&c使用法: /iron addon install <アドオンID|owner/repo|URL>"
+addon_remove_usage: "&c使用法: /iron addon remove <アドオンID>"
+addon_installing: "&eアドオンをダウンロード中... &7(%target%)"
+addon_removing: "&eアドオンを削除中... &7(%id%)"
+addon_success: "&a%message%"
+addon_failed: "&c%message%"
+addon_list_header: "&6=== インストール済み IrDi アドオン (%count%) ==="
+addon_list_empty: "&7IrDi アドオンはインストールされていません。"
+addon_certified_header: "&6=== 公認 IrDi アドオン (%count%) ==="
+addon_help_header: "&6=== アドオン管理 ==="
 
 # JailCommand
 command_jail_usage: "&c使用法: /jail <プレイヤー名> [理由]"

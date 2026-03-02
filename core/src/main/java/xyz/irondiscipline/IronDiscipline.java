@@ -46,6 +46,7 @@ public class IronDiscipline extends JavaPlugin implements IStorageProvider {
     private DiscordManager discordManager;
     private AutoPromotionManager autoPromotionManager;
     private WebDashboardManager webDashboardManager;
+    private AddonManager addonManager;
 
     // Utilities
     private xyz.irondiscipline.util.TaskScheduler taskScheduler;
@@ -213,6 +214,7 @@ public class IronDiscipline extends JavaPlugin implements IStorageProvider {
         this.linkManager = new LinkManager(this);
         this.discordManager = new DiscordManager(this);
         this.autoPromotionManager = new AutoPromotionManager(this, rankManager);
+        this.addonManager = new AddonManager(this);
 
         // Start auto-promotion task
         this.autoPromotionManager.startTask();
@@ -417,6 +419,10 @@ public class IronDiscipline extends JavaPlugin implements IStorageProvider {
 
     public AutoPromotionManager getAutoPromotionManager() {
         return autoPromotionManager;
+    }
+
+    public AddonManager getAddonManager() {
+        return addonManager;
     }
 
     public xyz.irondiscipline.util.TaskScheduler getTaskScheduler() {
