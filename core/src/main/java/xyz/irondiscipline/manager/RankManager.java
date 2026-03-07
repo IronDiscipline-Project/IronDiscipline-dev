@@ -140,11 +140,10 @@ public class RankManager implements IRankProvider {
             return CompletableFuture.completedFuture(null); // 最高階級
         }
 
-        Rank oldRank = current;
         return setRank(player, (IRank) next).thenApply(success -> {
             if (success) {
                 Bukkit.getPluginManager().callEvent(
-                        new RankChangeEvent(player, oldRank, next, RankChangeEvent.Cause.PROMOTE));
+                        new RankChangeEvent(player, current, next, RankChangeEvent.Cause.PROMOTE));
             }
             return success ? next : null;
         });
@@ -162,11 +161,10 @@ public class RankManager implements IRankProvider {
             return CompletableFuture.completedFuture(null); // 最低階級
         }
 
-        Rank oldRank = current;
         return setRank(player, (IRank) prev).thenApply(success -> {
             if (success) {
                 Bukkit.getPluginManager().callEvent(
-                        new RankChangeEvent(player, oldRank, prev, RankChangeEvent.Cause.DEMOTE));
+                        new RankChangeEvent(player, current, prev, RankChangeEvent.Cause.DEMOTE));
             }
             return success ? prev : null;
         });

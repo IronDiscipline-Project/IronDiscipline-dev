@@ -5,15 +5,12 @@ import xyz.irondiscipline.api.model.KillLog;
 import xyz.irondiscipline.api.provider.IKillLogProvider;
 import xyz.irondiscipline.model.JailRecord;
 import xyz.irondiscipline.manager.WarningManager.Warning;
-import org.bukkit.Bukkit;
-
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Level;
@@ -290,9 +287,6 @@ public class StorageManager implements IKillLogProvider {
     // ===== Jail Data =====
 
     /**
-     * 隔離データを保存
-     */
-    /**
      * 隔離データを保存 (インベントリバックアップ付き)
      */
     public CompletableFuture<Boolean> saveJailedPlayerAsync(UUID playerId, String playerName, String reason,
@@ -343,25 +337,6 @@ public class StorageManager implements IKillLogProvider {
     }
 
     /**
-     * @deprecated Use saveJailedPlayerAsync instead
-     */
-    @Deprecated
-    public void saveJailedPlayer(UUID playerId, String playerName, String reason,
-            UUID jailedBy, String originalLocation,
-            String inventoryBackup, String armorBackup) {
-        saveJailedPlayerAsync(playerId, playerName, reason, jailedBy, originalLocation, inventoryBackup, armorBackup);
-    }
-
-    /**
-     * @deprecated Use the version with inventory backup instead
-     */
-    @Deprecated
-    public void saveJailedPlayer(UUID playerId, String playerName, String reason,
-            UUID jailedBy, String originalLocation) {
-        saveJailedPlayer(playerId, playerName, reason, jailedBy, originalLocation, null, null);
-    }
-
-    /**
      * 隔離データを削除
      */
     public CompletableFuture<Void> removeJailedPlayerAsync(UUID playerId) {
@@ -376,65 +351,6 @@ public class StorageManager implements IKillLogProvider {
                 plugin.getLogger().log(Level.WARNING, plugin.getConfigManager().getRawMessage("log_delete_failed_jail"), e);
             }
         }, dbExecutor);
-    }
-
-    /**
-     * @deprecated Use removeJailedPlayerAsync instead
-     */
-    @Deprecated
-    public void removeJailedPlayer(UUID playerId) {
-        removeJailedPlayerAsync(playerId);
-    }
-
-    /**
-     * 隔離プレイヤーの元座標を取得 (同期 - 非推奨)
-     * @deprecated Use getOriginalLocationAsync instead
-     */
-    @Deprecated
-    public String getOriginalLocation(UUID playerId) {
-        if (isPrimaryThread()) {
-            plugin.getLogger().warning("Blocking database call on main thread: getOriginalLocation. Use getOriginalLocationAsync instead.");
-        }
-        return getOriginalLocationAsync(playerId).join();
-    }
-
-    protected boolean isPrimaryThread() {
-        try {
-            return Bukkit.isPrimaryThread();
-        } catch (Exception e) {
-            return false; // For testing context where Bukkit is not mocked
-        }
-    }
-
-    /**
-     * 隔離プレイヤーの元座標を取得 (非同期)
-     */
-    public CompletableFuture<String> getOriginalLocationAsync(UUID playerId) {
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                String sql = "SELECT original_location FROM jailed_players WHERE player_id = ?";
-                try (PreparedStatement ps = connection.prepareStatement(sql)) {
-                    ps.setString(1, playerId.toString());
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            return rs.getString("original_location");
-                        }
-                    }
-                }
-            } catch (SQLException e) {
-                plugin.getLogger().log(Level.WARNING, plugin.getConfigManager().getRawMessage("log_load_failed_location"), e);
-            }
-            return null;
-        }, dbExecutor);
-    }
-
-    /**
-     * 隔離プレイヤーのインベントリバックアップを取得 (同期 - 非推奨)
-     * @deprecated Use getInventoryBackupAsync instead
-     */
-    @Deprecated
-    public String getInventoryBackup(UUID playerId) {
-        return getInventoryBackupAsync(playerId).join();
     }
 
     /**
@@ -460,15 +376,6 @@ public class StorageManager implements IKillLogProvider {
     }
 
     /**
-     * 隔離プレイヤーの装備バックアップを取得 (同期 - 非推奨)
-     * @deprecated Use getArmorBackupAsync instead
-     */
-    @Deprecated
-    public String getArmorBackup(UUID playerId) {
-        return getArmorBackupAsync(playerId).join();
-    }
-
-    /**
      * 隔離プレイヤーの装備バックアップを取得 (非同期)
      */
     public CompletableFuture<String> getArmorBackupAsync(UUID playerId) {
@@ -488,15 +395,6 @@ public class StorageManager implements IKillLogProvider {
             }
             return null;
         }, dbExecutor);
-    }
-
-    /**
-     * 隔離中かどうか確認 (同期 - 非推奨)
-     * @deprecated Use isJailedAsync instead
-     */
-    @Deprecated
-    public boolean isJailed(UUID playerId) {
-        return isJailedAsync(playerId).join();
     }
 
     /**
