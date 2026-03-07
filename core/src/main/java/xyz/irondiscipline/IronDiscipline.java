@@ -3,8 +3,6 @@ package xyz.irondiscipline;
 import xyz.irondiscipline.api.provider.*;
 import xyz.irondiscipline.command.*;
 import xyz.irondiscipline.listener.*;
-import xyz.irondiscipline.listener.AsyncPlayerPreLoginListener;
-import xyz.irondiscipline.listener.JailListener;
 import xyz.irondiscipline.manager.*;
 import xyz.irondiscipline.util.RankUtil;
 import org.bukkit.Bukkit;
