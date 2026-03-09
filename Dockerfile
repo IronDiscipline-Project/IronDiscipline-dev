@@ -19,8 +19,9 @@ RUN apk add --no-cache curl jq
 COPY scripts/download-folia.sh /minecraft/
 RUN chmod +x /minecraft/download-folia.sh
 
+
 # プラグインコピー
-COPY target/IronDiscipline-dev-2.0.0-dev.jar /minecraft/plugins/
+COPY core/target/IronDiscipline-dev-2.0.0-dev.jar /minecraft/plugins/
 
 # 設定ファイル
 COPY docker/server.properties /minecraft/
