@@ -29,17 +29,17 @@ jobs:
 
     - name: Check target contents (for debug)
       run: |
-        if [ ! -d "target" ]; then
-          echo "Error: build failed, target directory not found"
+        if [ ! -d "core/target" ]; then
+          echo "Error: build failed, core/target directory not found"
           exit 1
         fi
-        echo "target directory contents:"
-        ls -l target
+        echo "core/target directory contents:"
+        ls -l core/target
 
     - name: Get version and timestamp
       id: version
       run: |
-        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+        VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout --file pom.xml)
         TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
         RELEASE_TAG="v${VERSION}-${TIMESTAMP}"
         echo "version=$VERSION" >> $GITHUB_OUTPUT
@@ -51,14 +51,14 @@ jobs:
       run: |
         VERSION="${{ steps.version.outputs.version }}"
         TIMESTAMP="${{ steps.version.outputs.timestamp }}"
-        BUILT_JAR=$(find target -name "IronDiscipline-dev-*.jar" ! -name "*latest.jar" -type f -print -quit)
+        BUILT_JAR=$(find core/target -name "IronDiscipline-dev-*.jar" ! -name "*latest.jar" -type f -print -quit)
         if [ -z "$BUILT_JAR" ]; then
           echo "Error: No built JAR found after build. Check if Maven created the artifact."
           exit 1
         fi
-        mv "$BUILT_JAR" "target/IronDiscipline-dev-${VERSION}-${TIMESTAMP}.jar"
-        cp "target/IronDiscipline-dev-${VERSION}-${TIMESTAMP}.jar" "target/IronDiscipline-dev-latest.jar"
-        ls -l target
+        mv "$BUILT_JAR" "core/target/IronDiscipline-dev-${VERSION}-${TIMESTAMP}.jar"
+        cp "core/target/IronDiscipline-dev-${VERSION}-${TIMESTAMP}.jar" "core/target/IronDiscipline-dev-latest.jar"
+        ls -l core/target
 
     - name: Create Versioned Release
       uses: softprops/action-gh-release@v1
@@ -67,10 +67,10 @@ jobs:
         name: IronDiscipline-dev ${{ steps.version.outputs.version }} (${{ steps.version.outputs.timestamp }})
         body: |
           ## IronDiscipline-dev ビルド
-          **バージョン:** ${{ steps.version.outputs.version }}  
+          **バージョン:** ${{ steps.version.outputs.version }}
           **ビルド日時:** ${{ steps.version.outputs.timestamp }} UTC
 
-          LuckPermsに依���しない高速版です。
+          LuckPermsに依存しない高速版です。
 
           ### 通常版からの移行
           ```
@@ -79,7 +79,7 @@ jobs:
 
           ### 変更履歴
           コミット: ${{ github.sha }}
-        files: target/IronDiscipline-dev-${{ steps.version.outputs.version }}-${{ steps.version.outputs.timestamp }}.jar
+        files: core/target/IronDiscipline-dev-${{ steps.version.outputs.version }}-${{ steps.version.outputs.timestamp }}.jar
         draft: false
         prerelease: false
       env:
@@ -92,7 +92,7 @@ jobs:
         name: Latest Build (LuckPerms非依存版)
         body: |
           ## IronDiscipline-dev 最新ビルド
-          **最新バージョン:** ${{ steps.version.outputs.version }}  
+          **最新バージョン:** ${{ steps.version.outputs.version }}
           **ビルド日時:** ${{ steps.version.outputs.timestamp }} UTC
 
           このリリースは常に最新のビルドを指します。
@@ -104,7 +104,7 @@ jobs:
           ```
           /irondev migrate
           ```
-        files: target/IronDiscipline-dev-latest.jar
+        files: core/target/IronDiscipline-dev-latest.jar
         draft: false
         prerelease: false
       env:

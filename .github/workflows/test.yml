@@ -29,9 +29,9 @@ jobs:
       if: always()
       run: |
         echo "## Test Results" >> $GITHUB_STEP_SUMMARY
-        if [ -d target/surefire-reports ] && ls target/surefire-reports/*.txt >/dev/null 2>&1; then
+        if [ -d core/target/surefire-reports ] && ls core/target/surefire-reports/*.txt >/dev/null 2>&1; then
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-          cat target/surefire-reports/*.txt | grep "Tests run:" | tail -1 >> $GITHUB_STEP_SUMMARY
+          cat core/target/surefire-reports/*.txt | grep "Tests run:" | tail -1 >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
         else
           echo "No test reports found" >> $GITHUB_STEP_SUMMARY
