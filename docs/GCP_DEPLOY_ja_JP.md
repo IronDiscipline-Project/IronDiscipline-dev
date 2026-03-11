@@ -126,5 +126,5 @@ sudo systemctl stop minecraft
 sudo systemctl start minecraft
 
 # 自動アップデート
-curl -sL https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
 ```

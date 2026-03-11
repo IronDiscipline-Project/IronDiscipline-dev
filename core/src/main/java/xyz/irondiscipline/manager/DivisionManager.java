@@ -82,7 +82,7 @@ public class DivisionManager implements IDivisionProvider {
     private void updatePlayerDisplay(UUID playerId) {
         Player player = Bukkit.getPlayer(playerId);
         if (player != null && player.isOnline()) {
-            plugin.getTaskScheduler().runEntity(player, () -> {
+            plugin.getTaskScheduler().runGlobal(() -> {
                 Rank rank = plugin.getRankManager().getRank(player);
                 String divisionDisplay = getDivisionDisplay(playerId);
                 TabNametagUtil.updatePlayer(player, rank, divisionDisplay);

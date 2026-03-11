@@ -32,7 +32,7 @@
 ssh root@<サーバーIPアドレス>
 
 # 2. スクリプトのダウンロードと実行
-curl -O https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
+curl -O https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
 sudo bash setup-ubuntu.sh
 ```
 
@@ -61,7 +61,7 @@ ssh root@<サーバーIP> "systemctl restart minecraft"
 最新版への更新は1コマンドで完了します：
 
 ```bash
-curl -sL https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
 ```
 
 ## 5. 旧Paper+LuckPerms版からの移行

@@ -46,5 +46,5 @@ Ver [Guía de Migración](MIGRATION_en_US.md) para detalles.
 ## Actualización Automática
 
 ```bash
-curl -sL https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
 ```

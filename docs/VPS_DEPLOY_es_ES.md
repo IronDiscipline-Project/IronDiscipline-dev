@@ -18,7 +18,7 @@
 
 ```bash
 ssh root@<ip-servidor>
-curl -O https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
+curl -O https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
 sudo bash setup-ubuntu.sh
 ```
 
@@ -31,7 +31,7 @@ scp target/IronDiscipline-dev-*.jar root@<ip-servidor>:/opt/minecraft/plugins/
 ## 4. Actualización Automática
 
 ```bash
-curl -sL https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
 ```
 
 ## Migración

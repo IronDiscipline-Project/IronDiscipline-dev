@@ -5,7 +5,7 @@
 # GitHubから最新のビルド(IronDiscipline-dev-latest.jar)をダウンロードして
 # サーバーを再起動します。
 
-GITHUB_USER="kaji11-jp"
+GITHUB_USER="IronDiscipline-Project"
 GITHUB_REPO="IronDiscipline-dev"
 JAR_NAME="IronDiscipline-dev-latest.jar"
 DOWNLOAD_URL="https://github.com/${GITHUB_USER}/${GITHUB_REPO}/releases/download/latest/${JAR_NAME}"

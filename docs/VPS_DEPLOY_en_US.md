@@ -32,7 +32,7 @@ SSH into your server and run:
 ssh root@<server-ip>
 
 # 2. Download and run setup script
-curl -O https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
+curl -O https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
 sudo bash setup-ubuntu.sh
 ```
 
@@ -57,7 +57,7 @@ ssh root@<server-ip> "systemctl restart minecraft"
 Update to latest version with one command:
 
 ```bash
-curl -sL https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
 ```
 
 ## 5. Migration from Old Paper+LuckPerms Version

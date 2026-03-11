@@ -6,7 +6,7 @@ Comprehensive management and discipline plugin for Minecraft servers.
 Designed for military and prison RP servers.
 
 > ⚡ **This version is Folia-exclusive!** Rank data is stored in a dedicated database. LuckPerms is not required.
-> For PaperSpigot, please use [IronDiscipline](https://github.com/kaji11-jp/IronDiscipline).
+> For PaperSpigot, please use [IronDiscipline](https://github.com/IronDiscipline-Project/IronDiscipline).
 
 ## Differences from Standard Version
 
@@ -51,7 +51,7 @@ Designed for military and prison RP servers.
 
 ## Installation
 
-1. Download the latest JAR from [Releases](https://github.com/kaji11-jp/IronDiscipline-dev/releases)
+1. Download the latest JAR from [Releases](https://github.com/IronDiscipline-Project/IronDiscipline-dev/releases)
 2. Place in your server's `plugins` folder
 3. Start the server
 4. Edit `plugins/IronDisciplineDev/config.yml` as needed
@@ -92,6 +92,32 @@ To migrate data from LuckPerms version:
 |---|---|---|
 | `/irondev migrate` | Migrate data from LuckPerms | `iron.admin` |
 | `/irondev status` | Show status | `iron.admin` |
+| `/iron addon install <id\|owner/repo\|URL>` | Install an addon | `iron.admin` |
+| `/iron addon list` | List installed addons | `iron.admin` |
+| `/iron addon certified` | List certified addons | `iron.admin` |
+| `/iron addon remove <id>` | Uninstall an addon | `iron.admin` |
+| `/iron addon refresh` | Force-refresh certified registry | `iron.admin` |
+
+## Addons
+
+IronDiscipline-dev includes a built-in addon manager via `/iron addon`.
+
+### Installation (3 methods)
+
+```
+# 1. Certified addon (reviewed by the IrDi team)
+/iron addon install <id>
+
+# 2. Directly from a GitHub Release
+/iron addon install <owner/repo>
+
+# 3. Direct URL (HTTPS only, 50 MB limit)
+/iron addon install https://example.com/myaddon.jar
+```
+
+Use `/iron addon certified` to browse the official addon registry.
+
+For addon development documentation, see [docs/ADDON_DEVELOPMENT.md](docs/ADDON_DEVELOPMENT.md).
 
 ## Build
 

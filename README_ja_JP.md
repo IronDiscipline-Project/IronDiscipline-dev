@@ -6,7 +6,7 @@ Minecraftサーバー用 総合管理・規律維持プラグイン。
 軍隊・刑務所RPサーバー向けに設計されています。
 
 > ⚡ **このバージョンは Folia 専用です！** 階級データは独自DBに保存され、LuckPermsに依存しません。
-> PaperSpigotを使用する場合は [IronDiscipline](https://github.com/kaji11-jp/IronDiscipline) をご利用ください。
+> PaperSpigotを使用する場合は [IronDiscipline](https://github.com/IronDiscipline-Project/IronDiscipline) をご利用ください。
 
 ## 通常版との違い
 
@@ -42,7 +42,7 @@ Minecraftサーバー用 総合管理・規律維持プラグイン。
 
 ## インストール
 
-1. [Releases](https://github.com/kaji11-jp/IronDiscipline-dev/releases) から最新のJARファイルをダウンロード
+1. [Releases](https://github.com/IronDiscipline-Project/IronDiscipline-dev/releases) から最新のJARファイルをダウンロード
 2. サーバーの `plugins` フォルダに配置
 3. サーバーを起動
 4. `plugins/IronDisciplineDev/config.yml` を必要に応じて編集
@@ -62,6 +62,34 @@ Minecraftサーバー用 総合管理・規律維持プラグイン。
 |---|---|---|
 | `/irondev migrate` | LuckPermsからデータ移行 | `iron.admin` |
 | `/irondev status` | ステータス表示 | `iron.admin` |
+| `/iron addon install <id\|owner/repo\|URL>` | アドオンをインストール | `iron.admin` |
+| `/iron addon list` | インストール済みアドオン一覧 | `iron.admin` |
+| `/iron addon certified` | 公認アドオン一覧 | `iron.admin` |
+| `/iron addon remove <id>` | アドオンをアンインストール | `iron.admin` |
+| `/iron addon refresh` | 公認レジストリを強制更新 | `iron.admin` |
+
+## アドオン
+
+IronDiscipline-dev は `/iron addon` コマンドでアドオンを管理できます。
+
+### インストール（3つの方法）
+
+```
+# 1. 公認アドオン（IrDi チームが審査済み）
+/iron addon install <id>
+
+# 2. GitHub の最新リリースから直接取得
+/iron addon install <owner/repo>
+
+# 3. URL を直接指定（HTTPS のみ・上限 50 MB）
+/iron addon install https://example.com/myaddon.jar
+```
+
+公認アドオンの一覧は `/iron addon certified` で確認できます。
+
+### アドオン開発
+
+アドオン開発者向けの詳細なドキュメントは [docs/ADDON_DEVELOPMENT.md](docs/ADDON_DEVELOPMENT.md) を参照してください。
 
 ## ビルド
 

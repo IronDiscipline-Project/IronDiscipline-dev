@@ -6,7 +6,7 @@ Umfassendes Verwaltungs- und Disziplin-Plugin für Minecraft-Server.
 Entwickelt für Militär- und Gefängnis-RP-Server.
 
 > ⚡ **Diese Version ist exklusiv für Folia!** Rangdaten werden in einer eigenen Datenbank gespeichert. LuckPerms ist nicht erforderlich.
-> Für PaperSpigot verwenden Sie bitte [IronDiscipline](https://github.com/kaji11-jp/IronDiscipline).
+> Für PaperSpigot verwenden Sie bitte [IronDiscipline](https://github.com/IronDiscipline-Project/IronDiscipline).
 
 ## Unterschiede zur Standardversion
 
@@ -42,7 +42,7 @@ Entwickelt für Militär- und Gefängnis-RP-Server.
 
 ## Installation
 
-1. Neueste JAR von [Releases](https://github.com/kaji11-jp/IronDiscipline-dev/releases) herunterladen
+1. Neueste JAR von [Releases](https://github.com/IronDiscipline-Project/IronDiscipline-dev/releases) herunterladen
 2. In den `plugins`-Ordner des Servers legen
 3. Server starten
 4. `plugins/IronDisciplineDev/config.yml` nach Bedarf bearbeiten
@@ -60,6 +60,32 @@ Entwickelt für Militär- und Gefängnis-RP-Server.
 |---|---|---|
 | `/irondev migrate` | Daten von LuckPerms migrieren | `iron.admin` |
 | `/irondev status` | Status anzeigen | `iron.admin` |
+| `/iron addon install <id\|owner/repo\|URL>` | Addon installieren | `iron.admin` |
+| `/iron addon list` | Installierte Addons anzeigen | `iron.admin` |
+| `/iron addon certified` | Zertifizierte Addons anzeigen | `iron.admin` |
+| `/iron addon remove <id>` | Addon deinstallieren | `iron.admin` |
+| `/iron addon refresh` | Registry-Cache aktualisieren | `iron.admin` |
+
+## Addons
+
+IronDiscipline-dev verfügt über einen integrierten Addon-Manager via `/iron addon`.
+
+### Installation (3 Methoden)
+
+```
+# 1. Zertifiziertes Addon (vom IrDi-Team geprüft)
+/iron addon install <id>
+
+# 2. Direkt aus einem GitHub Release
+/iron addon install <owner/repo>
+
+# 3. Direkte URL (nur HTTPS, max. 50 MB)
+/iron addon install https://example.com/myaddon.jar
+```
+
+Mit `/iron addon certified` kann die offizielle Addon-Registry durchsucht werden.
+
+Entwicklerdokumentation: [docs/ADDON_DEVELOPMENT.md](docs/ADDON_DEVELOPMENT.md).
 
 ## Build
 

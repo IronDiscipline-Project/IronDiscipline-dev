@@ -91,7 +91,7 @@ public class RankManager implements IRankProvider {
                         new RankChangeEvent(player, oldRank, newRank, RankChangeEvent.Cause.API));
 
                 // Tab/ネームタグ即時更新
-                plugin.getTaskScheduler().runEntity(player, () -> {
+                plugin.getTaskScheduler().runGlobal(() -> {
                     if (!player.isOnline())
                         return;
 
@@ -197,13 +197,10 @@ public class RankManager implements IRankProvider {
         // オンラインならTab更新
         Player player = Bukkit.getPlayer(playerId);
         if (player != null && player.isOnline()) {
-            plugin.getTaskScheduler().runEntity(player, () -> {
-                // 再ロード
-                getRankAsync(playerId).thenAccept(rank -> {
-                    plugin.getTaskScheduler().runEntity(player, () -> {
-                        String divisionDisplay = plugin.getDivisionManager().getDivisionDisplay(playerId);
-                        TabNametagUtil.updatePlayer(player, rank, divisionDisplay);
-                    });
+            getRankAsync(playerId).thenAccept(rank -> {
+                plugin.getTaskScheduler().runGlobal(() -> {
+                    String divisionDisplay = plugin.getDivisionManager().getDivisionDisplay(playerId);
+                    TabNametagUtil.updatePlayer(player, rank, divisionDisplay);
                 });
             });
         }
@@ -232,7 +229,7 @@ public class RankManager implements IRankProvider {
     public void loadPlayerCache(Player player) {
         UUID playerId = player.getUniqueId();
         getRankAsync(playerId).thenAccept(rank -> {
-            plugin.getTaskScheduler().runEntity(player, () -> {
+            plugin.getTaskScheduler().runGlobal(() -> {
                 if (!player.isOnline()) {
                     return;
                 }

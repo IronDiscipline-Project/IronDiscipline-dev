@@ -6,7 +6,7 @@ Minecraft服务器综合管理与纪律插件。
 专为军事和监狱RP服务器设计。
 
 > ⚡ **此版本为Folia专用！** 军衔数据存储在独立数据库中，不依赖LuckPerms。
-> 如需使用PaperSpigot，请使用 [IronDiscipline](https://github.com/kaji11-jp/IronDiscipline)。
+> 如需使用PaperSpigot，请使用 [IronDiscipline](https://github.com/IronDiscipline-Project/IronDiscipline)。
 
 ## 与标准版的区别
 
@@ -42,7 +42,7 @@ Minecraft服务器综合管理与纪律插件。
 
 ## 安装
 
-1. 从 [Releases](https://github.com/kaji11-jp/IronDiscipline-dev/releases) 下载最新JAR
+1. 从 [Releases](https://github.com/IronDiscipline-Project/IronDiscipline-dev/releases) 下载最新JAR
 2. 放入服务器的 `plugins` 文件夹
 3. 启动服务器
 4. 根据需要编辑 `plugins/IronDisciplineDev/config.yml`
@@ -60,6 +60,32 @@ Minecraft服务器综合管理与纪律插件。
 |---|---|---|
 | `/irondev migrate` | 从LuckPerms迁移数据 | `iron.admin` |
 | `/irondev status` | 显示状态 | `iron.admin` |
+| `/iron addon install <id\|owner/repo\|URL>` | 安装插件扩展 | `iron.admin` |
+| `/iron addon list` | 列出已安装的扩展 | `iron.admin` |
+| `/iron addon certified` | 列出认证扩展 | `iron.admin` |
+| `/iron addon remove <id>` | 卸载扩展 | `iron.admin` |
+| `/iron addon refresh` | 强制刷新认证注册表 | `iron.admin` |
+
+## 插件扩展（Addon）
+
+IronDiscipline-dev 内置了通过 `/iron addon` 命令管理扩展的功能。
+
+### 安装方式（3种）
+
+```
+# 1. 认证扩展（经 IrDi 团队审核）
+/iron addon install <id>
+
+# 2. 从 GitHub Release 直接获取
+/iron addon install <owner/repo>
+
+# 3. 直接指定 URL（仅 HTTPS，限制 50 MB）
+/iron addon install https://example.com/myaddon.jar
+```
+
+使用 `/iron addon certified` 可查看官方认证扩展列表。
+
+扩展开发文档：[docs/ADDON_DEVELOPMENT.md](docs/ADDON_DEVELOPMENT.md)。
 
 ## 构建
 

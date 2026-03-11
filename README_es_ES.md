@@ -6,7 +6,7 @@ Plugin integral de gestión y disciplina para servidores de Minecraft.
 Diseñado para servidores de RP militar y de prisiones.
 
 > ⚡ **¡Esta versión es exclusiva para Folia!** Los datos de rango se almacenan en una base de datos dedicada. LuckPerms no es necesario.
-> Para PaperSpigot, utilice [IronDiscipline](https://github.com/kaji11-jp/IronDiscipline).
+> Para PaperSpigot, utilice [IronDiscipline](https://github.com/IronDiscipline-Project/IronDiscipline).
 
 ## Diferencias con la Versión Estándar
 
@@ -42,7 +42,7 @@ Diseñado para servidores de RP militar y de prisiones.
 
 ## Instalación
 
-1. Descargar el JAR más reciente de [Releases](https://github.com/kaji11-jp/IronDiscipline-dev/releases)
+1. Descargar el JAR más reciente de [Releases](https://github.com/IronDiscipline-Project/IronDiscipline-dev/releases)
 2. Colocar en la carpeta `plugins` del servidor
 3. Iniciar el servidor
 4. Editar `plugins/IronDisciplineDev/config.yml` según sea necesario
@@ -60,6 +60,32 @@ Diseñado para servidores de RP militar y de prisiones.
 |---|---|---|
 | `/irondev migrate` | Migrar datos desde LuckPerms | `iron.admin` |
 | `/irondev status` | Mostrar estado | `iron.admin` |
+| `/iron addon install <id\|owner/repo\|URL>` | Instalar un addon | `iron.admin` |
+| `/iron addon list` | Listar addons instalados | `iron.admin` |
+| `/iron addon certified` | Listar addons certificados | `iron.admin` |
+| `/iron addon remove <id>` | Desinstalar un addon | `iron.admin` |
+| `/iron addon refresh` | Actualizar registro de addons | `iron.admin` |
+
+## Add-ons
+
+IronDiscipline-dev incluye un gestor de addons integrado mediante `/iron addon`.
+
+### Instalación (3 métodos)
+
+```
+# 1. Addon certificado (revisado por el equipo IrDi)
+/iron addon install <id>
+
+# 2. Directamente desde un GitHub Release
+/iron addon install <owner/repo>
+
+# 3. URL directa (solo HTTPS, límite 50 MB)
+/iron addon install https://example.com/myaddon.jar
+```
+
+Usa `/iron addon certified` para ver el registro oficial de addons.
+
+Documentación para desarrolladores: [docs/ADDON_DEVELOPMENT.md](docs/ADDON_DEVELOPMENT.md).
 
 ## Compilar
 

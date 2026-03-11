@@ -172,7 +172,7 @@ public class AddonManager {
      * {
      *   "addons": [
      *     { "id": "irdi-economy", "name": "IrDi-Economy", "short_key": "economy",
-     *       "github": "kaji11-jp/IrDi-Economy", "description": "...", ... },
+     *       "github": "IronDiscipline-Project/IrDi-Economy", "description": "...", ... },
      *     ...
      *   ]
      * }

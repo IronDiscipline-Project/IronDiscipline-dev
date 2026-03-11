@@ -18,7 +18,7 @@
 
 ```bash
 ssh root@<服务器IP>
-curl -O https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
+curl -O https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/setup-ubuntu.sh
 sudo bash setup-ubuntu.sh
 ```
 
@@ -31,7 +31,7 @@ scp target/IronDiscipline-dev-*.jar root@<服务器IP>:/opt/minecraft/plugins/
 ## 4. 自动更新
 
 ```bash
-curl -sL https://raw.githubusercontent.com/kaji11-jp/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
+curl -sL https://raw.githubusercontent.com/IronDiscipline-Project/IronDiscipline-dev/main/scripts/update-server.sh | sudo bash
 ```
 
 ## 迁移

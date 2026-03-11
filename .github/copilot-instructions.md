@@ -102,4 +102,68 @@ catch (ClassNotFoundException e) { Class.forName("org.h2.Driver"); }
 
 ### Tab/nametag updates
 
-After any rank or division change, call `TabNametagUtil.updatePlayer(player, rank, divisionDisplay)` inside a `runEntity` block so it executes on the correct regional thread.
+After any rank or division change, call `TabNametagUtil.updatePlayer(player, rank, divisionDisplay)` inside a `runGlobal` block. Scoreboard operations (`registerNewTeam` etc.) require the global region thread in Folia — using `runEntity` causes `UnsupportedOperationException`.
+
+## Addon System
+
+### インストール方法（3モード）
+
+アドオンはゲーム内コマンド `/iron addon install` でインストールします。
+
+```
+# 公認アドオン（irondiscipline.xyz のレジストリに登録済み）
+/iron addon install <id>
+
+# GitHub Release から最新 JAR を取得
+/iron addon install <owner/repo>
+
+# 直接 URL を指定（HTTPS のみ、上限 50 MB）
+/iron addon install https://example.com/myaddon.jar
+```
+
+### その他のコマンド
+
+| コマンド | エイリアス | 説明 |
+|---|---|---|
+| `/iron addon list` | `ls` | インストール済みアドオン一覧 |
+| `/iron addon certified` | `cert`, `av` | 公認アドオン一覧（レジストリキャッシュを表示） |
+| `/iron addon remove <id>` | `rm`, `uninstall` | アドオンをアンインストール（JAR 削除） |
+| `/iron addon refresh` | — | 公認レジストリキャッシュを強制更新（TTL: 1時間） |
+
+### アドオン配布の前提条件
+
+配布する JAR には **`irdi-addon.yml`** をルートに含める必要があります。含まれていない場合はインストール時に拒否されます。
+
+```yaml
+# irdi-addon.yml の必須フィールド
+id: myaddon
+name: My Addon
+version: 1.0.0
+description: 説明文
+author: yourname
+api-version: "2.0"
+github: owner/repo   # オプション
+```
+
+### 開発時の API 依存関係
+
+アドオン開発者はまず API モジュールをローカルにインストールします。
+
+```bash
+# リポジトリルートで実行
+mvn install -pl api
+```
+
+その後 `pom.xml` に追加：
+
+```xml
+<dependency>
+  <groupId>xyz.irondiscipline</groupId>
+  <artifactId>IronDiscipline-API</artifactId>
+  <version>2.0.0-dev</version>
+  <scope>provided</scope>
+</dependency>
+```
+
+詳細仕様は `docs/ADDON_DEVELOPMENT.md` を参照してください。
+
