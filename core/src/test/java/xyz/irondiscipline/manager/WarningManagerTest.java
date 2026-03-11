@@ -81,13 +81,6 @@ class WarningManagerTest {
             return null;
         }).when(taskScheduler).runEntity(any(Entity.class), any(Runnable.class));
 
-        // Scheduler mock - immediate execution for runTask
-        doAnswer(invocation -> {
-            Runnable r = invocation.getArgument(1);
-            r.run();
-            return null;
-        }).when(scheduler).runTask(any(IronDiscipline.class), any(Runnable.class));
-
         when(configManager.getRawMessage("warn_punish_kick_reason")).thenReturn("警告が%limit%回に達したため、キックされました。");
         when(configManager.getRawMessage("warn_punish_jail_reason")).thenReturn("警告%count%回による自動隔離");
 
